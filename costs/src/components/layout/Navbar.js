@@ -5,7 +5,7 @@ import styles from './Navbar.module.css'
 import logo from '../../img/costs_logo.png'
     function Navbar(){
     return(
-      <nav class={styles.navbar}>
+      <nav className={styles.navbar}>
         <Container>
         <Link to ="/"><img src={logo} alt='Costs'/></Link>
         <ul className={styles.list}>
