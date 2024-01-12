@@ -2,7 +2,7 @@ import ProjectForm from '../project/ProjectForm'
 import styles from './NewProject.module.css'
 import { useNavigate } from 'react-router-dom'
 function NewProject (){
-
+    const state = {message:"Projeto criado com sucesso!"};
     const navigate = useNavigate()
     function createPost(project){
         //initialize cost and services
@@ -20,8 +20,10 @@ function NewProject (){
         .then((data)=>{
             console.log(data)
         },
+        navigate("/projects", {state})
         //redirect
-        navigate("/projects", { message: "Projeto criado com sucesso!" })
+        //navigate("/projects", { message: "Projeto criado com sucesso!" })
+        
         )
         .catch(err=>console.log(err))
     }
