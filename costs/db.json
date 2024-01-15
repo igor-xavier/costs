@@ -10,17 +10,6 @@
       },
       "cost": 0,
       "services": []
-    },
-    {
-      "id": "dd07",
-      "name": "projeto 002",
-      "budget": "4000",
-      "category": {
-        "id": "3",
-        "name": "Design"
-      },
-      "cost": 0,
-      "services": []
     }
   ],
   "categories": [
