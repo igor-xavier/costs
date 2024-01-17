@@ -5,6 +5,8 @@ import Loading from '../layout/Loading'
 import Container from '../layout/Container'
 import ProjectForm from '../project/ProjectForm'
 import Message from '../layout/Message'
+import ServiceForm from '../servicos/ServiceForm'
+import {parse, v4 as uuidv4} from 'uuid'
 function Project(){
 
     const {id} = useParams()
@@ -12,7 +14,7 @@ function Project(){
     const [showProjectForm, setShowProjectForm] = useState(false)
     const [showServiceForm, setShowServiceForm] = useState(false)
 
-    const [message, setMessage] = useState()
+    const [message, setMessage] = useState(true)
     const [type, setType] = useState()
 
     useEffect(()=>{
@@ -27,6 +29,35 @@ function Project(){
     }).catch(err => console.log)
     },1000)
  }, [id])
+
+function createService(project){
+    setMessage('')
+    //lastserv
+    const lastService= project.services[project.services.length - 1]
+    lastService.id = uuidv4()
+    const lastServiceCost = lastService.cost
+    const newCost = parseFloat(project.cost) + parseFloat(lastServiceCost)
+    //maximum value validation
+    if(newCost > parseFloat(project.budget)){
+        setMessage('Orçamento ultrapassado')
+        setType('error')
+        project.services.pop()
+        return false
+    }
+    //add service cost to project total
+    project.cost = newCost
+    //update project
+    fetch(`http://localhost:5000/projects/${project.id}`,{
+        method:'PATCH',
+        headers:{
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(project),
+    }).then((resp)=>resp.json())
+    .then((data)=>{
+        //show service
+    })
+}
 
 function toggleProjectForm(){
     setShowProjectForm(!showProjectForm)
@@ -86,7 +117,11 @@ function editPost(project){
                         <button className={styles.btn} onClick={toggleServiceForm}>
                             {!showServiceForm ? 'Adicionar serviço':'Fechar'}</button>
                             <div className={styles.projectInfo}>
-                                {showServiceForm && <div>Formulário do serviço</div>}
+                                {showServiceForm && <ServiceForm 
+                                handleSubmit={createService}
+                                btnText={'Adicionar Serviço'}
+                                projectData={project}
+                                />}
                             </div>
                     </div>
                     <h2>Serviços</h2>
