@@ -7,14 +7,16 @@ import ProjectForm from '../project/ProjectForm'
 import Message from '../layout/Message'
 import ServiceForm from '../servicos/ServiceForm'
 import {parse, v4 as uuidv4} from 'uuid'
+import ServiceCard from '../servicos/ServiceCard'
 function Project(){
 
     const {id} = useParams()
     const [project, setProject] = useState([])
     const [showProjectForm, setShowProjectForm] = useState(false)
     const [showServiceForm, setShowServiceForm] = useState(false)
+    const [services, setServices] = useState([])
 
-    const [message, setMessage] = useState(true)
+    const [message, setMessage] = useState()
     const [type, setType] = useState()
 
     useEffect(()=>{
@@ -24,10 +26,12 @@ function Project(){
         headers: {
             'Content-Type': 'application/json',
         },
-    }).then(resp => resp.json()).then((data)=>{
+    }).then(resp => resp.json())
+    .then((data)=>{
         setProject(data)
+        setServices(data.services)
     }).catch(err => console.log)
-    },1000)
+    },300)
  }, [id])
 
 function createService(project){
@@ -55,7 +59,11 @@ function createService(project){
         body: JSON.stringify(project),
     }).then((resp)=>resp.json())
     .then((data)=>{
-        //show service
+        setShowServiceForm(false)
+        setProject(data)
+        setShowProjectForm(false)
+        setMessage('Projeto atualizado!')
+        setType('success')
     })
 }
 
@@ -81,12 +89,36 @@ function editPost(project){
         body:JSON.stringify(project),
     }).then(resp=>resp.json())
     .then((data)=>{
-        setProject(data)
-        setShowProjectForm(false)
-        setMessage('Projeto atualizado!')
-        setType('success')
+        setShowProjectForm(!showProjectForm)
+
     })
-    .catch()
+    .catch((err)=> console.log(err))
+}
+
+function removeService(id, cost){
+    const servicesUpdated = project.services.filter(
+        (service) => service.id !== id
+    )
+
+    const projectUpdated = project
+
+    projectUpdated.services = servicesUpdated
+    projectUpdated.cost = parseFloat(projectUpdated.cost) - parseFloat(cost)
+
+    fetch(`http://localhost:5000/projects/${projectUpdated.id}`,{
+        method : 'PATCH',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(projectUpdated),
+})
+.then((resp)=>resp.json())
+.then((data)=>{
+    setProject(projectUpdated)
+    setServices(servicesUpdated)
+    setMessage('Serviço removido!')
+})
+.catch((err)=>console.log(err))
 }
     return (
         <>{project.name ?
@@ -126,7 +158,20 @@ function editPost(project){
                     </div>
                     <h2>Serviços</h2>
                     <Container customClass='start'>
-                            <p>Itens de serviços</p>
+                            {services.length > 0 &&
+                            services.map((service)=>(
+                                <ServiceCard 
+                                    id={service.id}
+                                    name={service.name}
+                                    cost={service.cost}
+                                    description={service.description}
+                                    key={service.id}
+                                    handleRemove={removeService}
+
+                                    
+                                />
+                            ))}
+                            {services.length === 0 && <p>Não há nenhum serviço cadastrado</p>}
                     </Container>
 
                 </Container>

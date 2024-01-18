@@ -1,46 +1,15 @@
 {
   "projects": [
     {
-      "id": "c81f",
-      "name": "projeto 01",
-      "budget": "4000",
+      "id": "f0ee",
+      "name": "projeto 002",
+      "budget": "1000",
       "category": {
         "id": "1",
         "name": "Infra"
       },
-      "cost": 510,
-      "services": [
-        {
-          "name": "ok",
-          "cost": "10",
-          "description": "ok",
-          "id": "90ad8a2a-6131-4d06-b2d3-e97883974f78"
-        },
-        {
-          "name": "novo serv",
-          "cost": "500",
-          "description": "novo teste",
-          "id": "2715164f-5fab-4f34-b530-82ae6eaaba1c"
-        }
-      ]
-    },
-    {
-      "id": "7b70",
-      "name": "projeto 002",
-      "budget": "6000",
-      "category": {
-        "id": "4",
-        "name": "Planejamento"
-      },
-      "cost": 133,
-      "services": [
-        {
-          "name": "projeto 001",
-          "cost": "133",
-          "description": "novo teste",
-          "id": "0812ed88-5f04-4e47-84f9-7e2f038d7cfa"
-        }
-      ]
+      "cost": 0,
+      "services": []
     }
   ],
   "categories": [
